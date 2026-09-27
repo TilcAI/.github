@@ -6,18 +6,24 @@
 
 <p align="center">
   <img alt="Status: early-stage, in development" src="https://img.shields.io/badge/status-early--stage%20%C2%B7%20in%20development-e8ad5c">
-  <img alt="Network: Stellar testnet only" src="https://img.shields.io/badge/network-Stellar%20testnet%20only-2cc3cd">
+  <img alt="Target network: Stellar testnet" src="https://img.shields.io/badge/target-Stellar%20testnet-2cc3cd">
   <img alt="No production funds" src="https://img.shields.io/badge/funds-none%20in%20production-8a9a9c">
 </p>
 
 ---
 
-**TilcAI** is an SDK and gateway, in development, for spending policies and trust signals in payments between AI agents — starting on **Stellar**.
+**TilcAI** is an SDK and gateway in development for spending policies and trust signals in payments between AI agents — starting on **Stellar**.
 
-Before an agent pays, TilcAI checks **who** gets paid, **for what** and **within which budget**. Then it allows, blocks or asks a human — and keeps a signed receipt of every decision, including refusals.
+The intended flow checks **who** gets paid, **for what** and **within which budget** before an agent can pay. The goal is to allow, block or request human approval under explicit rules, with verifiable decision receipts — not to give an agent unrestricted access to a wallet.
 
 > [!IMPORTANT]
-> TilcAI is early-stage. There is no deployed contract, no published package and no live service yet. Everything below describes what we are building.
+> TilcAI is early-stage. The website and a small policy prototype exist; **there is no deployed contract, published SDK, x402 payment integration or live payment service**. The website demo is a visual simulation and moves no funds. An `ALLOW` result from the prototype does not authorise a transfer.
+
+## What exists today
+
+- **[Landing and architecture](https://tilcai.vercel.app/en)** — public site in [English](https://tilcai.vercel.app/en) and [Spanish](https://tilcai.vercel.app/es).
+- **Interactive concept demo** — included in the landing code, with three sample policy scenarios: approved purchase, changed recipient and over-limit amount. Once the latest web build is deployed, it appears at [`/en#demo`](https://tilcai.vercel.app/en#demo). It is a browser-only visual simulation, not a payment or a connection to the core package.
+- **`tilcai-core` foundation** — a small, tested TypeScript function that evaluates a normalised payment intent against a policy and returns `ALLOW` or `DENY` with a reason code. It does not authenticate offers, reserve budget atomically, sign receipts or contact Stellar.
 
 ## The problem
 
@@ -63,15 +69,20 @@ Listing a technology does not imply partnership, sponsorship or a finished integ
 
 ## Repositories
 
-Repositories will appear here as they are published. Each one states clearly what is implemented and what is still planned.
+| Repository | Current scope | Access |
+| --- | --- | --- |
+| [`tilcai-web`](https://github.com/TilcAI/tilcai-web) | Public landing, proposed architecture and visual policy demo | Public |
+| `tilcai-core` | Minimal policy-evaluation prototype with tests; no payment integration | Private to the team for now |
+
+The website demo and core prototype are separate today. Connecting them is future implementation work, not a current feature.
 
 ---
 
 <details>
 <summary><b>Español</b></summary>
 
-**TilcAI** es un SDK y gateway en desarrollo para políticas de gasto y señales de confianza en pagos entre agentes de IA, empezando por **Stellar**. Antes de que un agente pague, TilcAI comprueba a quién se paga, por qué y con qué presupuesto; luego permite, bloquea o pide aprobación humana, y guarda un recibo firmado de cada decisión, incluidos los rechazos.
+**TilcAI** es un SDK y gateway en desarrollo para políticas de gasto y señales de confianza en pagos entre agentes de IA, empezando por **Stellar**. El flujo propuesto comprobará a quién se paga, por qué y con qué presupuesto antes de permitir, bloquear o pedir aprobación humana. Los recibos firmados aún no están implementados.
 
-Es un proyecto en etapa temprana: todavía no hay contrato desplegado, paquete publicado ni servicio en producción. La base compradora se construye en el bootcamp **Stellar Elite** (mediados de octubre de 2026) y la ampliación con ofertas firmadas de negocios está prevista para **HackMeridian** (25–26 de octubre de 2026), sujeta a la aceptación en el evento.
+Ya existen la [web pública](https://tilcai.vercel.app/es), una demo conceptual incluida en su código (visible en [`/es#demo`](https://tilcai.vercel.app/es#demo) cuando se despliegue la última versión) y una pequeña base de código de políticas con pruebas (`tilcai-core`, privado por ahora). La demo no mueve fondos ni usa todavía ese núcleo. No hay contrato desplegado, SDK publicado, integración de pagos x402 ni servicio en producción. La base compradora se construye durante **Stellar Elite** (mediados de octubre de 2026) y la ampliación con ofertas firmadas de negocios está prevista para **HackMeridian** (25–26 de octubre de 2026), sujeta a la aceptación en el evento.
 
 </details>
