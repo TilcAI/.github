@@ -1,69 +1,89 @@
 <p align="center">
-  <img src="./tilcai-logo.webp" alt="TilcAI logo: an Andean tilcayo (wildcat) head with the TilcAI wordmark" width="320">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./tilcai-logo-white.webp">
+    <img src="./tilcai-logo-dark.webp" alt="TilcAI logo: a geometric tilcayo (Andean wildcat) whose tail forms the i of the TilcAI wordmark" width="320">
+  </picture>
 </p>
 
-<h3 align="center">Give agents purchasing power. Keep humans in control.</h3>
+<h3 align="center">Your agent buys. Your business responds. You stay in control.</h3>
 
 <p align="center">
-  <img alt="Status: early-stage, in development" src="https://img.shields.io/badge/status-early--stage%20%C2%B7%20in%20development-e8ad5c">
-  <img alt="Target network: Stellar testnet" src="https://img.shields.io/badge/target-Stellar%20testnet-2cc3cd">
-  <img alt="No production funds" src="https://img.shields.io/badge/funds-none%20in%20production-8a9a9c">
+  <img alt="Status: early-stage, in development" src="https://img.shields.io/badge/status-early--stage%20%C2%B7%20in%20development-6F4CFF">
+  <img alt="Target network: Stellar testnet" src="https://img.shields.io/badge/target-Stellar%20testnet-66D8FF">
+  <img alt="No production funds" src="https://img.shields.io/badge/funds-none%20in%20production-4BCA81">
 </p>
 
 ---
 
-**TilcAI** is an SDK and gateway in development for spending policies and trust signals in payments between AI agents — starting on **Stellar**.
+**TilcAI** is agent-to-business commerce infrastructure in development, starting on **Stellar**. It connects the agent acting for a person or organization with the agent of a business so they can inquire, quote, book and buy, with limited authority, verifiable terms and payments on Stellar.
 
-The intended flow checks **who** gets paid, **for what** and **within which budget** before an agent can pay. The goal is to allow, block or request human approval under explicit rules, with verifiable decision receipts — not to give an agent unrestricted access to a wallet.
+The agent interprets the request. The business answers from its own system. TilcAI decides what the agent is allowed to do: it checks identity, terms, policy and budget, asks for human approval when needed, and keeps separate evidence of the decision, the payment and the delivery.
 
 > [!IMPORTANT]
-> TilcAI is early-stage. The website and a small policy prototype exist; **there is no deployed contract, published SDK, x402 payment integration or live payment service**. The website demo is a visual simulation and moves no funds. An `ALLOW` result from the prototype does not authorise a transfer.
+> TilcAI is early-stage. **There is no enabled purchase flow, deployed contract, published SDK, running MCP server or live payment service.** The office on the website is a local simulation that moves no funds. An `ALLOW` decision from the prototype does not authorise a transfer.
+
+<p align="center">
+  <a href="https://tilcai.vercel.app/en">
+    <img src="./tilcai-office.webp" alt="The TilcAI website hero: an isometric office where simulated buyer agents walk from the intent hub to business agents, the policy core, human approval, the Stellar vault and receipts, with live metrics, an A2A stream and simulation commands" width="100%">
+  </a>
+  <br>
+  <sub>The website's first screen: a simulated office where every room is a piece of TilcAI. Figures, IDs and ledger numbers are illustrative.</sub>
+</p>
 
 ## What exists today
 
-- **[Landing and architecture](https://tilcai.vercel.app/en)** — public site in [English](https://tilcai.vercel.app/en) and [Spanish](https://tilcai.vercel.app/es).
-- **Interactive concept demo** — included in the landing code, with three sample policy scenarios: approved purchase, changed recipient and over-limit amount. Once the latest web build is deployed, it appears at [`/en#demo`](https://tilcai.vercel.app/en#demo). It is a browser-only visual simulation, not a payment or a connection to the core package.
-- **`tilcai-core` foundation** — a small, tested TypeScript function that evaluates a normalised payment intent against a policy and returns `ALLOW` or `DENY` with a reason code. It does not authenticate offers, reserve budget atomically, sign receipts or contact Stellar.
+| Component | State | What it is, and what it is not |
+| --- | --- | --- |
+| **[Website](https://tilcai.vercel.app/en)** ([EN](https://tilcai.vercel.app/en) · [ES](https://tilcai.vercel.app/es)) | Available | Bilingual site with a full-screen agent-office simulation (intent → quote → policy → approval → x402 payment → receipt), a policy scenario demo and the proposed architecture. It runs in the browser and calls neither `tilcai-core` nor a payment network. |
+| **Policy evaluator** (`tilcai-core`) | Available · prototype | Tested TypeScript function that checks limits, recipient, network and asset, and returns `ALLOW` or `DENY` with a reason code. `ALLOW` means the policy passed, nothing more. |
+| **Shared contracts** (`tilcai-core`) | Available · in team review | Versioned types for IDs, states, errors, intent, mandate, exact approval bindings and twelve MCP tools. They keep decision, payment and delivery as separate states. |
+| **x402 payment rail** | Available · component | Payment verification and settlement through an OpenZeppelin Relayer. A Testnet payment was confirmed on-chain, and repeating the same payload did not pay twice. Not yet connected to quotes, approvals or orders; the test used the network's native asset, not USDC. |
 
 ## The problem
 
-Agents can already discover and pay for APIs and tools with [x402](https://developers.stellar.org/docs/build/agentic-payments/x402). But a funded wallet is not a mandate:
+Assistants can already find services and pay for APIs with [x402](https://developers.stellar.org/docs/build/agentic-payments/x402). Delegating a real purchase needs more than a funded wallet:
 
-- **Budgets multiply** — three sub-agents with a 1 USDC limit each can spend 3 USDC, not 1.
-- **Limits ignore the purchase** — a per-payment cap does not stop a small payment to a cloned endpoint or a swapped recipient.
-- **Instructions can be hijacked** — prompt injection or a retry loop can change the amount, the recipient, or repeat a purchase.
-- **No one can explain the payment** — a transaction hash proves a transfer, not who authorised it or why another one was refused.
+- **Terms come from the business, not the model** — price, availability and payee must be verified against the business's own system and a trusted key.
+- **A wallet is not a mandate** — the user has to decide how much an agent may spend, with whom, on what, and when it must ask.
+- **Several agents, one budget** — three sub-agents with a 1 USDC limit each can spend 3 USDC, not 1.
+- **Instructions can be hijacked** — prompt injection or a retry loop can change the amount or the payee, or repeat a purchase.
+- **A transfer is not a delivery** — a transaction hash proves a payment, not who authorised it, why another one was refused, or whether the service was delivered.
 
 ## How it is meant to work
 
 ```mermaid
 flowchart LR
-    A[Agent] --> I[Payment intent<br/>from the 402 challenge]
-    I --> P[Identity + policy]
-    P -->|ALLOW| X[x402 + USDC<br/>on Stellar testnet]
-    P -->|DENY| R[Decision receipt]
-    P -->|REQUIRE_HUMAN| H[Human approval]
-    X --> R
+    U[Your agent<br/>intent] --> Q[Business agent<br/>signed quote]
+    Q --> P{Policy core<br/>identity · terms · budget}
+    P -->|ALLOW| B[Budget hold]
+    P -->|REQUIRE_APPROVAL| H[Human approval<br/>exact terms]
+    H --> B
+    P -->|DENY| R[Receipts]
+    B --> X[x402 payment<br/>Stellar testnet]
+    X --> D[Delivery confirmed<br/>by the business]
+    D --> R
 ```
 
-- **Shared budget tree on Soroban** — a principal funds a root budget and splits it into sub-mandates; a child can never exceed its parent.
-- **Deterministic policies** — the model proposes, rules decide. Price and recipient come from the service's 402 challenge, never from model output. Anything unverifiable is denied.
-- **Trust signals v0** — a signed provider profile, buyer feedback tied to a paid receipt, and a narrow validation of response format and freshness. Inspired by the concepts of [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004); not an implementation of it.
-- **Decision receipts** — signed, with reason codes, for every yes and every no.
+- **Deterministic policies** — the model proposes, rules decide. Amount and payee come from verified terms, never from model output. Anything unverifiable is denied.
+- **Approval per purchase first** — the user authorises the exact terms. Limited delegation through smart accounts comes later, once account, signer and rail are tested together.
+- **Shared budget** — limits and holds coordinated across agents, so they cannot spend the same funds twice.
+- **Separate evidence** — decision, payment and delivery each keep their own record, refusals included.
 
-## Roadmap
+## Build status
 
-| Stage | Scope | Status |
-| --- | --- | --- |
-| **Stellar Elite** · mid-October 2026 | Buyer base: budget tree contract (testnet), policy gateway, SDK + MCP tool, reference paid service, receipts, trust signals v0 | In development |
-| **HackMeridian** · Oct 25–26, 2026 | Seller extension: signed offers verified against a trusted key and the 402 challenge | Planned · subject to event acceptance |
-| **Vision** | Agent-to-business commerce: bookings, cancellations and refunds between agents of people and small businesses | Not scheduled |
+We build around capabilities, not promises, and publish no fixed dates.
 
-A signature alone never authorises a payment: the buyer also checks that the seller's key was already trusted, that the terms match the 402 challenge, and that the spending policy still allows it.
+| Stage | Capabilities |
+| --- | --- |
+| **Available** | Website and simulation · policy evaluator · shared contracts · x402 rail with OpenZeppelin Relayer on Testnet |
+| **In integration** | MCP connector and assistant guides · quotes, orders and commercial adapter · approval per purchase · payment reconciliation and delivery |
+| **Next** | Smart accounts with limited permissions · shared budget across agents · scheduled tasks and more clients or providers |
+
+An item moves to another stage only with evidence in its stated environment. The live status, with a maintainer per item, is on the website's [progress section](https://tilcai.vercel.app/en#roadmap).
 
 ## Planned stack
 
-`Stellar Testnet` · `Soroban` · `USDC (SEP-41)` · `x402 exact` · `TypeScript` · `MCP` · `Next.js`
+`Stellar Testnet` · `Soroban` · `USDC` · `x402` · `OpenZeppelin Relayer` · `MCP` · `TypeScript` · `Next.js`
 
 Listing a technology does not imply partnership, sponsorship or a finished integration. No support for other networks is claimed.
 
@@ -71,18 +91,18 @@ Listing a technology does not imply partnership, sponsorship or a finished integ
 
 | Repository | Current scope | Access |
 | --- | --- | --- |
-| [`tilcai-web`](https://github.com/TilcAI/tilcai-web) | Public landing, proposed architecture and visual policy demo | Public |
-| `tilcai-core` | Minimal policy-evaluation prototype with tests; no payment integration | Private to the team for now |
+| [`tilcai-web`](https://github.com/TilcAI/tilcai-web) | Public website: office simulation, policy demo, proposed architecture | Public |
+| `tilcai-core` | Policy evaluator and shared contracts with tests; no payment integration | Private to the team for now |
 
-The website demo and core prototype are separate today. Connecting them is future implementation work, not a current feature.
+The website and the core are separate today. Connecting them is future work, not a current feature.
 
 ---
 
 <details>
 <summary><b>Español</b></summary>
 
-**TilcAI** es un SDK y gateway en desarrollo para políticas de gasto y señales de confianza en pagos entre agentes de IA, empezando por **Stellar**. El flujo propuesto comprobará a quién se paga, por qué y con qué presupuesto antes de permitir, bloquear o pedir aprobación humana. Los recibos firmados aún no están implementados.
+**TilcAI** es una infraestructura en desarrollo para el comercio entre agentes, empezando por **Stellar**. Conecta el agente de una persona u organización con el agente de una empresa para consultar, cotizar, reservar y comprar con autoridad limitada, condiciones verificables y pagos sobre Stellar. El agente interpreta la solicitud, la empresa responde desde su propio sistema y TilcAI decide qué puede hacer el agente: verifica identidad, condiciones, política y presupuesto, pide aprobación humana cuando corresponde y guarda evidencias separadas de la decisión, el pago y la entrega.
 
-Ya existen la [web pública](https://tilcai.vercel.app/es), una demo conceptual incluida en su código (visible en [`/es#demo`](https://tilcai.vercel.app/es#demo) cuando se despliegue la última versión) y una pequeña base de código de políticas con pruebas (`tilcai-core`, privado por ahora). La demo no mueve fondos ni usa todavía ese núcleo. No hay contrato desplegado, SDK publicado, integración de pagos x402 ni servicio en producción. La base compradora se construye durante **Stellar Elite** (mediados de octubre de 2026) y la ampliación con ofertas firmadas de negocios está prevista para **HackMeridian** (25–26 de octubre de 2026), sujeta a la aceptación en el evento.
+Hoy existen la [web pública](https://tilcai.vercel.app/es), con una oficina de agentes simulada a pantalla completa (sin fondos, no llama a `tilcai-core` ni a una red de pagos); el evaluador de políticas y los contratos compartidos en `tilcai-core` (privado por ahora); y un riel de pago x402 con OpenZeppelin Relayer probado en Testnet, todavía sin conectar a cotizaciones, aprobaciones ni órdenes. No hay un flujo de compra habilitado, contrato desplegado, SDK publicado, servidor MCP en funcionamiento ni servicio en producción. El estado de cada capacidad, sin fechas fijas, se publica en la [sección de avance](https://tilcai.vercel.app/es#roadmap) de la web.
 
 </details>
