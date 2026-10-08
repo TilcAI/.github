@@ -50,47 +50,50 @@ flowchart LR
 
 *This is the target **integrated purchase flow**. The Fuji → Stellar payment route works in testnet; the merchant, approval, channel and order integrations are being built. A payment receipt is not proof of delivery.*
 
-### Inside the infrastructure
+### How TilcAI works
 
 ```mermaid
 flowchart TB
-    subgraph ENTRY["Entry points"]
+    subgraph ACTORS["Buyer and business"]
         direction LR
-        WA["WhatsApp adapter<br/>in integration"]
-        MCP["MCP server<br/>planned"]
-        API["Payment API<br/>available in testnet"]
+        BUYER["Buyer<br/>WhatsApp · MCP · API"]
+        BUSINESS["Business<br/>agent · POS · console"]
     end
 
-    subgraph PLATFORM["TilcAI · shared infrastructure"]
-        direction LR
-        GW["Gateway and identity"] --> MQ["Merchant quote and order"]
-        MQ --> PA["Policy and exact approval"]
-        PA --> PAY["CCTP API and worker"]
-        PAY --> REC["Commercial reconciliation and receipts"]
+    subgraph PLATFORM["TilcAI — common infrastructure"]
+        direction TB
+        ID["Identity and accounts"] ~~~ CAT["Catalog and quotes"]
+        POLICY["Policy and approval"] ~~~ ORDER["Orders and idempotency"]
+        ROUTER["Payment router"] ~~~ RECEIPTS["Reconciliation and receipts"]
+        ID --> POLICY --> ORDER --> ROUTER
+        CAT --> ORDER
     end
 
-    subgraph SYSTEMS["External business and payment systems"]
+    subgraph RAILS["Compatible payment rails"]
         direction LR
-        BIZ["Business catalog or operator"]
-        FUJI["Avalanche Fuji · USDC"] --> CCTP["Circle CCTP V2"] --> STELLAR["Stellar Testnet · USDC"]
+        X402["x402 + Stellar<br/>direct USDC integration pending"]
+        CCTP["CCTP + Stellar<br/>Fuji → Stellar USDC tested"]
     end
 
-    WA --> GW
-    MCP --> GW
-    API --> GW
-    MQ <--> BIZ
-    PAY --> FUJI
-    STELLAR --> REC
+    BUYER -->|request| ID
+    BUSINESS -->|verifiable offer| CAT
+    ROUTER -->|select route| X402
+    ROUTER -->|select route| CCTP
+    X402 --> RECEIPTS
+    CCTP --> RECEIPTS
+    RECEIPTS --> FINAL["Order, receipt and fulfilment<br/>business confirms delivery separately"]
 
+    classDef actor fill:#EEE9FF,stroke:#7757D9,color:#25184F;
+    classDef module fill:#F4F1FC,stroke:#8D78BF,color:#261F40;
+    classDef planned fill:#FFF1D6,stroke:#C47B08,color:#573700;
     classDef tested fill:#DDF7EF,stroke:#168465,color:#0C4C3A;
-    classDef building fill:#FFF1D6,stroke:#C47B08,color:#573700;
-    classDef external fill:#EAF0FF,stroke:#6273A5,color:#1C2B59;
-    class API,PAY tested;
-    class WA,MCP,GW,MQ,PA,REC building;
-    class BIZ,FUJI,CCTP,STELLAR external;
+    class BUYER,BUSINESS actor;
+    class ID,CAT,POLICY,ORDER,ROUTER,RECEIPTS,FINAL module;
+    class X402 planned;
+    class CCTP tested;
 ```
 
-**Reading the diagram:** green marks a component tested in testnet; amber marks integration or planned work; blue marks an external system. The solid arrows describe the intended full connection, not a claim that the commercial flow already runs end to end.
+**Reading the diagram:** this is the product architecture, not a claim that every arrow already runs. The CCTP Fuji → Stellar component is tested in testnet; direct x402 payment in USDC and the complete commercial flow remain in integration. Payment confirmation and business fulfilment are separate events.
 
 ### What we can show today
 
