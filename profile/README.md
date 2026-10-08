@@ -50,13 +50,47 @@ flowchart LR
 
 *This is the target **integrated purchase flow**. The Fuji → Stellar payment route works in testnet; the merchant, approval, channel and order integrations are being built. A payment receipt is not proof of delivery.*
 
-<p align="center">
-  <a href="https://tilcai.vercel.app/en">
-    <img src="./tilcai-office.webp" alt="TilcAI's simulated agent office, showing intent, business, policy, approval, payment and receipt zones" width="100%">
-  </a>
-  <br>
-  <sub>Interactive office on the website. Its agents, metrics and transactions are simulated; this screen moves no funds.</sub>
-</p>
+### Inside the infrastructure
+
+```mermaid
+flowchart TB
+    subgraph ENTRY["Entry points"]
+        direction LR
+        WA["WhatsApp adapter<br/>in integration"]
+        MCP["MCP server<br/>planned"]
+        API["Payment API<br/>available in testnet"]
+    end
+
+    subgraph PLATFORM["TilcAI · shared infrastructure"]
+        direction LR
+        GW["Gateway and identity"] --> MQ["Merchant quote and order"]
+        MQ --> PA["Policy and exact approval"]
+        PA --> PAY["CCTP API and worker"]
+        PAY --> REC["Commercial reconciliation and receipts"]
+    end
+
+    subgraph SYSTEMS["External business and payment systems"]
+        direction LR
+        BIZ["Business catalog or operator"]
+        FUJI["Avalanche Fuji · USDC"] --> CCTP["Circle CCTP V2"] --> STELLAR["Stellar Testnet · USDC"]
+    end
+
+    WA --> GW
+    MCP --> GW
+    API --> GW
+    MQ <--> BIZ
+    PAY --> FUJI
+    STELLAR --> REC
+
+    classDef tested fill:#DDF7EF,stroke:#168465,color:#0C4C3A;
+    classDef building fill:#FFF1D6,stroke:#C47B08,color:#573700;
+    classDef external fill:#EAF0FF,stroke:#6273A5,color:#1C2B59;
+    class API,PAY tested;
+    class WA,MCP,GW,MQ,PA,REC building;
+    class BIZ,FUJI,CCTP,STELLAR external;
+```
+
+**Reading the diagram:** green marks a component tested in testnet; amber marks integration or planned work; blue marks an external system. The solid arrows describe the intended full connection, not a claim that the commercial flow already runs end to end.
 
 ### What we can show today
 
