@@ -1,144 +1,117 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./tilcai-logo-white.webp">
-    <img src="./tilcai-logo-dark.webp" alt="TilcAI" width="280">
+    <img src="./tilcai-logo-dark.webp" alt="Logo oficial de TilcAI" width="260">
   </picture>
 </p>
 
-<h1 align="center">Commerce infrastructure for agents and businesses</h1>
+<h1 align="center">Comercio verificable para la era de los agentes</h1>
 
-<p align="center"><strong>Your agent buys. Your business responds. You stay in control.</strong></p>
+<p align="center"><strong>Tu agente ayuda a comprar. Tú decides cuándo y cuánto pagar. El negocio puede comprobar el resultado.</strong></p>
 
 <p align="center">
-  <a href="https://tilcai.vercel.app/en">Explore the interactive website</a> ·
-  <a href="https://github.com/TilcAI/documentation/blob/main/0-OFICIAL/CONTEXTO_OFICIAL_TILCAI.md">Read the architecture</a> ·
-  <a href="https://github.com/orgs/TilcAI/projects/1/views/1">Follow the build</a>
+  <a href="https://www.tilcai.xyz/">Sitio web</a> ·
+  <a href="https://github.com/TilcAI/documentation/blob/main/0-OFICIAL/CONTEXTO_OFICIAL_TILCAI.md">Documentación</a> ·
+  <a href="https://github.com/orgs/TilcAI/projects/1">Avances</a> ·
+  <a href="https://t.me/+CfbYnvPNXTo2OGMx">Comunidad</a>
 </p>
 
 <p align="center">
-  <img alt="Hackathon build" src="https://img.shields.io/badge/build-hackathon-7248FF">
-  <img alt="Payment environment: testnet" src="https://img.shields.io/badge/payments-testnet%20only-38BDF8">
-  <img alt="End-to-end purchase: in integration" src="https://img.shields.io/badge/agent%20purchase-in%20integration-F59E0B">
+  <img alt="Piloto USDC en MAINNET: Avalanche a Stellar" src="https://img.shields.io/badge/MAINNET-USDC%20Avalanche%20%E2%86%92%20Stellar-6D49FF">
+  <img alt="Pruebas en testnet" src="https://img.shields.io/badge/TESTNET-pruebas%20activas-22A699">
+  <img alt="Compra comercial completa en integración" src="https://img.shields.io/badge/checkout%20comercial-en%20integraci%C3%B3n-E5A02D">
 </p>
 
 ---
 
-### The idea in one transaction
+## ¿Qué es TilcAI?
 
-> **“Buy 20 bags of cement.”** The buyer's agent should be able to ask several businesses, receive a quote backed by actual stock and a registered payee, request approval for the exact terms, pay once, and return a verifiable receipt. The business should see the same order and confirm pickup or delivery separately.
+TilcAI desarrolla infraestructura para que **agentes de personas y negocios puedan coordinar una compra sin confundir una conversación con una autorización de pago**. El agente puede solicitar un producto o servicio; el negocio responde con precio, vigencia y destino de cobro; la persona aprueba las condiciones exactas; y TilcAI conecta esa decisión con un pago en USDC y su evidencia.
 
-Today, an assistant can compose that request. The hard part is turning it into an **authorized, priced, payable and auditable operation** across a buyer, a business and a payment network. That is the infrastructure TilcAI is building.
+La operación debe responder tres preguntas para ambas partes:
 
-**TilcAI connects the buyer's agent to a business agent or adapter.** The business remains the source of truth for price and availability. TilcAI applies identity, policy, limits and human approval; coordinates a supported USDC payment route; then reconciles payment evidence with the order. A model never gets spending authority merely because it can write a message.
+- **Identidad y autoridad:** ¿qué persona o negocio participa y quién puede aprobar el gasto? Una wallet o passkey puede vincular una autorización, pero **no equivale por sí sola a una verificación legal de identidad o KYC**.
+- **Validación:** ¿el precio, el destinatario, la vigencia y los límites coinciden con lo aprobado?
+- **Resultado y reputación:** ¿se pagó realmente y qué comprobantes lo demuestran? Construir reputación a partir de operaciones verificables es una **dirección de producto**, no una capacidad ya desplegada.
 
-### From intent to receipt
+**Ejemplo:** «Compra 20 bolsas de cemento». El agente del comprador pide cotizaciones. Un negocio confirma precio y disponibilidad. La persona aprueba una oferta concreta. TilcAI ejecuta **un solo intento de pago** por una ruta compatible, reconcilia el resultado y entrega referencias a ambas partes. El negocio confirma el retiro o la entrega **por separado**: pagar no demuestra que el producto se entregó.
+
+## De una intención a dos comprobantes
 
 ```mermaid
 flowchart LR
-    U[Buyer<br/>WhatsApp · assistant · API] --> I[Intent and order<br/>TilcAI]
-    I --> M[Business agent<br/>or merchant adapter]
-    M <--> C[Catalog · stock · operator]
-    M --> Q[Versioned quote<br/>amount · expiry · payee]
-    Q --> A{Policy and<br/>exact approval}
-    A -->|Denied| E[Decision evidence]
-    A -->|Approved| P[One payment attempt]
-    P --> X[USDC on Fuji<br/>CCTP V2 + Relayer]
-    X --> S[USDC on Stellar<br/>reconciliation]
-    S --> R[Buyer and business<br/>payment receipts]
-    R --> F[Business confirms<br/>fulfilment]
+    A[Persona y agente<br/>solicitud] --> B[Negocio<br/>oferta y disponibilidad]
+    B --> C[TilcAI<br/>identidad, reglas y límites]
+    C --> D{Aprobación exacta<br/>de la persona}
+    D -->|No| X[Sin pago]
+    D -->|Sí| E[Una ruta de USDC<br/>x402 o CCTP]
+    E --> F[Conciliación<br/>y recibos para ambas partes]
+    F --> G[Negocio confirma<br/>entrega o prestación]
 ```
 
-*This is the target **integrated purchase flow**. The Fuji → Stellar payment route works in testnet; the merchant, approval, channel and order integrations are being built. A payment receipt is not proof of delivery.*
+> **Alcance del diagrama:** describe el flujo comercial que estamos integrando. Las pruebas de pagos descritas abajo **no significan** que toda esta compra, desde la cotización hasta la entrega, ya esté operativa en MAINNET.
 
-### How TilcAI works
+### Las dos rutas de pago
 
-```mermaid
-flowchart TB
-    subgraph ACTORS["Buyer and business"]
-        direction LR
-        BUYER["Buyer<br/>WhatsApp · MCP · API"]
-        BUSINESS["Business<br/>agent · POS · console"]
-    end
-
-    subgraph PLATFORM["TilcAI — common infrastructure"]
-        direction TB
-        ID["Identity and accounts"] ~~~ CAT["Catalog and quotes"]
-        POLICY["Policy and approval"] ~~~ ORDER["Orders and idempotency"]
-        ROUTER["Payment router"] ~~~ RECEIPTS["Reconciliation and receipts"]
-        ID --> POLICY --> ORDER --> ROUTER
-        CAT --> ORDER
-    end
-
-    subgraph RAILS["Compatible payment rails"]
-        direction LR
-        X402["x402 + Stellar<br/>direct USDC integration pending"]
-        CCTP["CCTP + Stellar<br/>Fuji → Stellar USDC tested"]
-    end
-
-    BUYER -->|request| ID
-    BUSINESS -->|verifiable offer| CAT
-    ROUTER -->|select route| X402
-    ROUTER -->|select route| CCTP
-    X402 --> RECEIPTS
-    CCTP --> RECEIPTS
-    RECEIPTS --> FINAL["Order, receipt and fulfilment<br/>business confirms delivery separately"]
-
-    classDef actor fill:#EEE9FF,stroke:#7757D9,color:#25184F;
-    classDef module fill:#F4F1FC,stroke:#8D78BF,color:#261F40;
-    classDef planned fill:#FFF1D6,stroke:#C47B08,color:#573700;
-    classDef tested fill:#DDF7EF,stroke:#168465,color:#0C4C3A;
-    class BUYER,BUSINESS actor;
-    class ID,CAT,POLICY,ORDER,ROUTER,RECEIPTS,FINAL module;
-    class X402 planned;
-    class CCTP tested;
-```
-
-**Reading the diagram:** this is the product architecture, not a claim that every arrow already runs. The CCTP Fuji → Stellar component is tested in testnet; direct x402 payment in USDC and the complete commercial flow remain in integration. Payment confirmation and business fulfilment are separate events.
-
-### What we can show today
-
-| Evidence | State | Where to inspect it |
+| Ruta | Cuándo se usaría | Estado |
 | --- | --- | --- |
-| **USDC Avalanche Fuji → Stellar Testnet** through Circle CCTP V2, with an OpenZeppelin Relayer sponsoring the tested gasless path | **Implemented and verified as a payment component in testnet**; a purchase order is not connected yet | [`tilcai-infrastructure`](https://github.com/TilcAI/tilcai-infrastructure) · [technical flow](https://github.com/TilcAI/tilcai-infrastructure#flujo-de-la-fase-1) |
-| **x402 on Stellar** through the Relayer | **Tested separately with the network's native asset**; USDC and the end-to-end order flow still need verification | [`tilcai-core` payment-rail guide](https://github.com/TilcAI/tilcai-core/blob/main/docs/payment-rail-reproducibility.md) |
-| **Policy checks, shared IDs and state contracts** | **Code and tests exist**; `ALLOW` is a policy decision, not a signature or transfer | [`tilcai-core`](https://github.com/TilcAI/tilcai-core) |
-| **Eight-network CCTP laboratory** | **Route research, code and verification matrix**; this does not mean eight TilcAI purchase routes are live | [`tilcai-cctp-engine`](https://github.com/TilcAI/tilcai-cctp-engine) |
-| **Bilingual website and agent-office demo** | **Interactive simulation**, separate from the payment backend | [`tilcai-web`](https://github.com/TilcAI/tilcai-web) · [website](https://tilcai.vercel.app/en) |
-| **WhatsApp purchase demonstration on 2 October** | **Shown by the team** with payment confirmation and explorer links; a reusable TilcAI channel adapter is still in progress | [Project context and evidence levels](https://github.com/TilcAI/documentation/blob/main/0-OFICIAL/CONTEXTO_OFICIAL_TILCAI.md) |
+| **Stellar + x402** | El USDC ya está en Stellar y se solicita un pago directo por un recurso o servicio. | Experimentos aislados en testnet; el pago comercial integrado con USDC **no está habilitado en MAINNET**. |
+| **Circle CCTP V2** | El USDC nativo está en otra red compatible y debe llegar a Stellar. Circle coordina la quema, atestación y emisión en destino. | **Avalanche C-Chain → Stellar Public Network probado con fondos reales en un piloto limitado.** |
 
-### What we're connecting next
+Son rutas **alternativas para una operación**, no dos cargos. CCTP transporta USDC nativo; no convierte cualquier token ni dinero fiat.
 
-1. **Merchant side:** a pilot business agent or adapter returns a versioned quote from a controlled catalog, with availability and a registered payee.
-2. **Buyer control:** persist the order, enforce policy and bind a human approval to its exact amount, asset, network, destination and expiry.
-3. **Payment and evidence:** link one approved order to one payment attempt, reconcile Fuji and Stellar references, and send consistent receipts to both sides. Fulfilment remains a separate business confirmation.
-4. **Access:** bring the existing WhatsApp channel into the common API, then expose the same operation to assistants through MCP. Account issuance through a secure link, additional networks and a fiat on-ramp are subsequent integrations.
+## MAINNET: qué se ha demostrado
 
-The [build board](https://github.com/orgs/TilcAI/projects/1/views/1) shows owners and progress. The [integration plan and demo criteria](https://github.com/TilcAI/documentation/blob/main/2-ARQUITECTURA/TILCAI_FLUJO_INTEGRADO_Y_DEMO_2026-10-08.md) define what counts as an end-to-end proof.
+El equipo documentó una instancia separada para **Avalanche C-Chain y Stellar Public Network**, además de la instancia de **Avalanche Fuji y Stellar Testnet**. El corredor principal usa USDC nativo, Circle CCTP V2 y un relayer que puede patrocinar el gas para el pagador.
+
+En el piloto del **10 de octubre de 2026** se registraron dos transferencias de **0,01 USDC** de Avalanche a Stellar, una de ellas iniciada por la API de TilcAI. Después, el equipo mostró en una demo una transferencia **gasless de 1 USDC** hacia una cuenta usada por Vaquita: el flujo llegó a `SETTLED`, la aplicación mostró **1,00 USD de fondos disponibles** y posteriormente una posición de **0,99 USD en Ahorros**. La causa de esa diferencia de 0,01 USD no está determinada; la grabación tampoco demuestra rendimientos ganados.
+
+[Consulta el registro técnico del piloto](https://github.com/TilcAI/documentation/blob/main/2-ARQUITECTURA/TILCAI_MAINNET_Y_TESTNET_SIMULTANEOS_2026-10-10.md) y el [estado de despliegue y riesgos](https://github.com/TilcAI/tilcai-infrastructure/blob/main/deploy/MAINNET_DEPLOYMENT.md). Los importes, estados y capturas de la demo fueron aportados por el equipo; **este perfil no sustituye una verificación independiente de cada transacción y del abono en Vaquita**.
 
 > [!IMPORTANT]
-> **Testnet only.** A verified cross-chain transfer is not yet a completed agent purchase. The website does not move funds. Wallet creation through WhatsApp, a BOB ↔ USDC ramp, a published SDK, and production purchasing are not available today.
+> **MAINNET probado no significa producto listo para operar a escala.** El corredor se probó con importes pequeños. Los contratos propios no cuentan con auditoría independiente; faltan endurecimiento del relayer, infraestructura de datos y pruebas de recuperación y concurrencia. Las cuentas inteligentes, vaults y x402 comercial permanecen deshabilitados en la instancia MAINNET. No presentamos el QR simulado como depósito fiat real.
 
-### Explore the project
+## Estado del producto
 
-| Repository | Responsibility |
+| Componente | Estado comprobable |
 | --- | --- |
-| [`tilcai-web`](https://github.com/TilcAI/tilcai-web) | Product story, interactive office and simulation |
-| [`tilcai-core`](https://github.com/TilcAI/tilcai-core) | Shared contracts, authority rules and payment-rail experiments |
-| [`tilcai-infrastructure`](https://github.com/TilcAI/tilcai-infrastructure) | API, worker, Relayer integration and Fuji → Stellar USDC route |
-| [`tilcai-cctp-engine`](https://github.com/TilcAI/tilcai-cctp-engine) | Cross-chain research and route matrix |
-| [`documentation`](https://github.com/TilcAI/documentation) | [Official context](https://github.com/TilcAI/documentation/blob/main/0-OFICIAL/CONTEXTO_OFICIAL_TILCAI.md), [architecture](https://github.com/TilcAI/documentation/tree/main/2-ARQUITECTURA) and [assigned backlog](https://github.com/TilcAI/documentation/blob/main/3-CONSTRUCCION/ISSUES_PROPUESTAS_2026-10-08.md) |
+| **USDC Avalanche → Stellar** | Corredor CCTP probado en testnet y en un piloto limitado de MAINNET. |
+| **Wallet con passkey en Telegram** | Mini App y smart account en **Stellar Testnet**; no es una wallet multired ni una wallet MAINNET pública. |
+| **Oferta, aprobación y orden comercial** | Piezas técnicas y flujos de demostración; la compra completa entre agente comprador y negocio sigue en integración. |
+| **MCP para asistentes** | Trabajo de integración; una conexión MCP no concede por sí misma permiso para gastar. |
+| **Web interactiva** | Explica y simula el producto. Sus escenas no representan transacciones reales del visitante. |
+| **Reputación verificable** | Objetivo de producto basado en identidad, validación y recibos; aún no es un sistema de puntuación operativo. |
 
-Want to reproduce the payment component? Start with the [infrastructure README](https://github.com/TilcAI/tilcai-infrastructure#uso), its unit tests and typecheck. An on-chain test additionally needs testnet accounts, USDC, a configured Relayer and the environment described there; **never commit keys or seeds**.
+Ningún modelo de IA obtiene autoridad para mover fondos solo por redactar un pedido. Una decisión de política favorable tampoco es una firma, una transferencia o una confirmación de entrega.
+
+## Repositorios
+
+| Repositorio | Responsabilidad |
+| --- | --- |
+| [`tilcai-infrastructure`](https://github.com/TilcAI/tilcai-infrastructure) | API, workers, conciliación, relayer y corredor USDC Avalanche → Stellar. |
+| [`tilcai-core`](https://github.com/TilcAI/tilcai-core) | Contratos de datos, reglas de autoridad e investigación de rieles de pago. |
+| [`tilcai-cctp-engine`](https://github.com/TilcAI/tilcai-cctp-engine) | Laboratorio de CCTP y matriz de rutas; una ruta modelada no implica un corredor comercial activo. |
+| [`tilcai-web`](https://github.com/TilcAI/tilcai-web) | Sitio, demostraciones interactivas y visualización del producto. |
+| [`documentation`](https://github.com/TilcAI/documentation) | Contexto oficial, arquitectura, decisiones y trabajo pendiente. |
+
+## Qué estamos construyendo ahora
+
+1. Conectar un negocio piloto con catálogo, disponibilidad, cotización versionada y destino de cobro registrado.
+2. Vincular la aprobación humana de **importe, activo, red, destinatario y vencimiento** con una orden y un único intento de pago.
+3. Entregar recibos coherentes a comprador y negocio, conciliados con las pruebas de origen y destino; registrar la entrega como evento distinto.
+4. Revisar de forma independiente los contratos y reforzar firmantes, permisos, persistencia y recuperación antes de ampliar el uso de MAINNET.
+
+## Construyamos juntos
+
+Buscamos negocios con casos de uso concretos, desarrolladores y personas que quieran probar el flujo y revisar su evidencia.
+
+**[Web](https://www.tilcai.xyz/)** · **[X](https://x.com/tilcai_ai)** · **[Instagram](https://www.instagram.com/tilcai/)** · **[Comunidad de Telegram](https://t.me/+CfbYnvPNXTo2OGMx)** · **[Tablero de trabajo](https://github.com/orgs/TilcAI/projects/1)**
 
 <details>
-<summary><strong>En español — qué es TilcAI</strong></summary>
+<summary><strong>English summary</strong></summary>
 
-<br>
-
-**TilcAI construye la infraestructura para que agentes de personas y negocios puedan concretar compras, reservas y pagos con reglas claras.** El agente comprador expresa la intención; el negocio responde con una cotización basada en su catálogo y un destino de cobro registrado; TilcAI comprueba identidad, condiciones, límites y aprobación, coordina el pago y conserva evidencias distintas de decisión, liquidación y entrega.
-
-El corredor **USDC Avalanche Fuji → Stellar Testnet** ya se implementó y probó como componente. Todavía estamos conectando el agente del negocio, la orden, la aprobación exacta, WhatsApp y los recibos de ambos lados para demostrar una compra completa. La [web interactiva](https://tilcai.vercel.app/es) es una simulación sin fondos. El [contexto oficial](https://github.com/TilcAI/documentation/blob/main/0-OFICIAL/CONTEXTO_OFICIAL_TILCAI.md) separa lo implementado, lo verificado, lo mostrado por el equipo y lo pendiente.
+TilcAI is building commerce infrastructure for buyer and merchant agents. A merchant provides an offer; the buyer approves exact terms; TilcAI applies rules, coordinates one USDC payment route and reconciles evidence for both sides. A limited **Avalanche C-Chain → Stellar Public Network MAINNET** CCTP pilot has moved real USDC, including a team-recorded 1 USDC deposit flow into Vaquita. This verifies a payment component, **not** an end-to-end merchant purchase or production readiness. Passkey wallets currently run on Stellar Testnet; merchant checkout, MAINNET x402 and reputation derived from verified receipts remain in development. [Read the technical record](https://github.com/TilcAI/tilcai-infrastructure/blob/main/deploy/MAINNET_DEPLOYMENT.md).
 
 </details>
 
-<p align="center"><sub>Built for the Stellar Starmaker hackathon. Technologies named here describe integrations, not endorsements or partnerships.</sub></p>
+<p align="center"><sub>TilcAI es un proyecto independiente. Mencionar Stellar, Circle, Avalanche o Vaquita describe tecnología o pruebas; no implica respaldo comercial de esas organizaciones.</sub></p>

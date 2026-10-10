@@ -46,3 +46,39 @@ Incidencias que el usuario debe conocer:
 - No se reconstruyó ninguna imagen Docker: los contenedores en uso siguen con la versión anterior.
 
 **En este repositorio.** Solo se añadieron la regla del historial y sus archivos (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, `.gitattributes`, `AGENT_HISTORY.md`), fusionados en `main`. Ningún otro archivo cambió.
+
+## 2026-10-09T21:13:52Z · Omar · Codex (GPT-6)
+
+- **Sesión:** 01a11f48-77ad-75f2-a07a-7e01949c0d42
+- **Rama:** `main`
+- **Repositorios:** `tilcai-infrastructure`, `tilcai-web`, `documentation`, `tilcai-cctp-engine`, `tilcai-core`, `.github`
+
+### Prompt
+
+> Acabo de traer nuevos cambios de los repos:
+>
+> Revisalos:
+>
+> [adjunto: captura de los seis repositorios de TilcAI]
+> [adjunto: salida de PowerShell de las actualizaciones con git pull]
+
+### Salida
+
+El pull añadió únicamente la política de historial de agentes y archivos de redirección para herramientas; no cambió la arquitectura o las integraciones. No se cambió código; esta entrada registra la revisión.
+
+## 2026-10-10T16:16:46Z · Omar · Codex (GPT-6)
+
+- **Sesión:** 01a11f48-77ad-75f2-a07a-7e01949c0d42
+- **Rama:** `main`
+- **Repositorios:** `.github`
+
+### Prompt
+
+> Actualiza el readme del .github
+> Nivel pro
+> que se entienda completamente
+> *MAINNET
+
+### Salida
+
+Se actualizó `profile/README.md` como perfil público de TilcAI. Explica el problema de comercio entre agentes, identidad, validación, autoridad, reputación como dirección de producto, el flujo de compra, x402 frente a CCTP, el piloto USDC Avalanche C-Chain → Stellar Public Network y la demo reportada de 1 USDC hacia Vaquita. Se distingue el pago probado en MAINNET de una compra comercial completa y de la preparación para producción; se enlazan los registros técnicos, los repositorios verificados y los canales públicos. Se conservó el logo y se añadió un resumen en inglés. `git diff --check` terminó sin errores. No se hizo commit ni push; se respetaron los cambios previos de `AGENT_HISTORY.md`.
