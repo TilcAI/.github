@@ -7,7 +7,7 @@
 
 <h1 align="center">Comercio verificable para la era de los agentes</h1>
 
-<p align="center"><strong>Tu agente ayuda a comprar. Tú decides cuándo y cuánto pagar. El negocio puede comprobar el resultado.</strong></p>
+<p align="center"><strong>Un agente ayuda a comprar. La persona autoriza el pago. El negocio comprueba el resultado.</strong></p>
 
 <p align="center">
   <a href="https://www.tilcai.xyz/">Sitio web</a> ·
@@ -49,7 +49,7 @@ flowchart LR
     F --> G[Negocio confirma<br/>entrega o prestación]
 ```
 
-> **Alcance del diagrama:** describe el flujo comercial que estamos integrando. Las pruebas de pagos descritas abajo **no significan** que toda esta compra, desde la cotización hasta la entrega, ya esté operativa en MAINNET.
+> **Alcance del diagrama:** describe el flujo comercial en integración. Las pruebas de pagos descritas abajo **no significan** que toda esta compra, desde la cotización hasta la entrega, ya esté operativa en MAINNET.
 
 ### Las dos rutas de pago
 
@@ -62,14 +62,14 @@ Son rutas **alternativas para una operación**, no dos cargos. CCTP transporta U
 
 ## MAINNET: qué se ha demostrado
 
-El equipo documentó una instancia separada para **Avalanche C-Chain y Stellar Public Network**, además de la instancia de **Avalanche Fuji y Stellar Testnet**. El corredor principal usa USDC nativo, Circle CCTP V2 y un relayer que puede patrocinar el gas para el pagador.
+TilcAI documentó una instancia separada para **Avalanche C-Chain y Stellar Public Network**, además de la instancia de **Avalanche Fuji y Stellar Testnet**. El corredor principal usa USDC nativo, Circle CCTP V2 y un relayer que puede patrocinar el gas para el pagador.
 
 En el piloto del **10 de octubre de 2026** se registraron dos transferencias de **0,01 USDC** de Avalanche a Stellar, una de ellas iniciada por la API de TilcAI. Después, el equipo mostró en una demo una transferencia **gasless de 1 USDC** hacia una cuenta usada por Vaquita: el flujo llegó a `SETTLED`, la aplicación mostró **1,00 USD de fondos disponibles** y posteriormente una posición de **0,99 USD en Ahorros**. La causa de esa diferencia de 0,01 USD no está determinada; la grabación tampoco demuestra rendimientos ganados.
 
-[Consulta el registro técnico del piloto](https://github.com/TilcAI/documentation/blob/main/2-ARQUITECTURA/TILCAI_MAINNET_Y_TESTNET_SIMULTANEOS_2026-10-10.md) y el [estado de despliegue y riesgos](https://github.com/TilcAI/tilcai-infrastructure/blob/main/deploy/MAINNET_DEPLOYMENT.md). Los importes, estados y capturas de la demo fueron aportados por el equipo; **este perfil no sustituye una verificación independiente de cada transacción y del abono en Vaquita**.
+[Registro técnico del piloto](https://github.com/TilcAI/documentation/blob/main/2-ARQUITECTURA/TILCAI_MAINNET_Y_TESTNET_SIMULTANEOS_2026-10-10.md) · [Estado de despliegue y riesgos](https://github.com/TilcAI/tilcai-infrastructure/blob/main/deploy/MAINNET_DEPLOYMENT.md). Los importes, estados y capturas de la demo fueron registrados por el equipo; **la verificación independiente de cada transacción y del abono en Vaquita sigue pendiente**.
 
 > [!IMPORTANT]
-> **MAINNET probado no significa producto listo para operar a escala.** El corredor se probó con importes pequeños. Los contratos propios no cuentan con auditoría independiente; faltan endurecimiento del relayer, infraestructura de datos y pruebas de recuperación y concurrencia. Las cuentas inteligentes, vaults y x402 comercial permanecen deshabilitados en la instancia MAINNET. No presentamos el QR simulado como depósito fiat real.
+> **MAINNET probado no significa producto listo para operar a escala.** El corredor se probó con importes pequeños. Los contratos propios no cuentan con auditoría independiente; faltan endurecimiento del relayer, infraestructura de datos y pruebas de recuperación y concurrencia. Las cuentas inteligentes, vaults y x402 comercial permanecen deshabilitados en la instancia MAINNET. El QR simulado no constituye un depósito fiat real.
 
 ## Estado del producto
 
@@ -94,16 +94,16 @@ Ningún modelo de IA obtiene autoridad para mover fondos solo por redactar un pe
 | [`tilcai-web`](https://github.com/TilcAI/tilcai-web) | Sitio, demostraciones interactivas y visualización del producto. |
 | [`documentation`](https://github.com/TilcAI/documentation) | Contexto oficial, arquitectura, decisiones y trabajo pendiente. |
 
-## Qué estamos construyendo ahora
+## Prioridades de desarrollo
 
 1. Conectar un negocio piloto con catálogo, disponibilidad, cotización versionada y destino de cobro registrado.
 2. Vincular la aprobación humana de **importe, activo, red, destinatario y vencimiento** con una orden y un único intento de pago.
 3. Entregar recibos coherentes a comprador y negocio, conciliados con las pruebas de origen y destino; registrar la entrega como evento distinto.
 4. Revisar de forma independiente los contratos y reforzar firmantes, permisos, persistencia y recuperación antes de ampliar el uso de MAINNET.
 
-## Construyamos juntos
+## Colaborar con TilcAI
 
-Buscamos negocios con casos de uso concretos, desarrolladores y personas que quieran probar el flujo y revisar su evidencia.
+TilcAI busca negocios con casos de uso concretos, desarrolladores y personas interesadas en probar el flujo y revisar su evidencia.
 
 **[Web](https://www.tilcai.xyz/)** · **[X](https://x.com/tilcai_ai)** · **[Instagram](https://www.instagram.com/tilcai/)** · **[Comunidad de Telegram](https://t.me/+CfbYnvPNXTo2OGMx)** · **[Tablero de trabajo](https://github.com/orgs/TilcAI/projects/1)**
 

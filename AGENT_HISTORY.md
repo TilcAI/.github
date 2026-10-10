@@ -82,3 +82,20 @@ El pull añadió únicamente la política de historial de agentes y archivos de 
 ### Salida
 
 Se actualizó `profile/README.md` como perfil público de TilcAI. Explica el problema de comercio entre agentes, identidad, validación, autoridad, reputación como dirección de producto, el flujo de compra, x402 frente a CCTP, el piloto USDC Avalanche C-Chain → Stellar Public Network y la demo reportada de 1 USDC hacia Vaquita. Se distingue el pago probado en MAINNET de una compra comercial completa y de la preparación para producción; se enlazan los registros técnicos, los repositorios verificados y los canales públicos. Se conservó el logo y se añadió un resumen en inglés. `git diff --check` terminó sin errores. No se hizo commit ni push; se respetaron los cambios previos de `AGENT_HISTORY.md`.
+
+## 2026-10-10T16:47:22Z · Omar · Codex (GPT-6)
+
+- **Sesión:** 01a11f48-77ad-75f2-a07a-7e01949c0d42
+- **Rama:** `main`
+- **Repositorios:** `.github`
+
+### Prompt
+
+> La actualizacion del readme de .github es un relato en 3ra persona verdad?
+> Como si lo hubiera redactado
+>
+> *Si haces correcciones, haz el push
+
+### Salida
+
+El README mezclaba tercera persona con frases en primera persona plural y segunda persona. Se unificó en tercera persona institucional, con TilcAI y el equipo como sujetos, conservando los alcances verificables de MAINNET y las distinciones con el flujo comercial en integración. Se comprobó `git diff --check` y se publicó la corrección en `main`.
